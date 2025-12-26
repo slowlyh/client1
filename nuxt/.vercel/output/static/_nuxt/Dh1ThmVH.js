@@ -1,1 +1,0 @@
-const t=r=>Number(r||0).toLocaleString("id-ID"),e=r=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",minimumFractionDigits:0}).format(r),a=r=>new Date(r).toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});export{t as a,a as b,e as f};

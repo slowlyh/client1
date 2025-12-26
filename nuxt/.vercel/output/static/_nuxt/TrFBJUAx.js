@@ -1,1 +1,0 @@
-import{af as c,h as i,i as t}from"./a6n2H657.js";const h=()=>{const o=i(),e=c("session_token",{default:()=>null,maxAge:o.public.session_expires}),s=t(()=>e.value?.token??""),n=t(()=>e.value?.type??""),u=t(()=>!!e.value?.token);return{token:s,type:n,isLogin:u,setAuth:a=>{e.value=a},clearAuth:()=>{e.value=null}}};export{h as u};
