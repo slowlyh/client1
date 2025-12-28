@@ -1,3 +1,5 @@
+'use server'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getInvoice, invoiceUpdate } from '@/lib/firebase/db'
 import { getTransactionStatus } from '@/lib/payment/tripay'

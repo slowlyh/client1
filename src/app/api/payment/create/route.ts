@@ -1,3 +1,5 @@
+'use server'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getProduct, productIncrementSales, invoiceAdd } from '@/lib/firebase/db'
 import { requireAuth } from '@/lib/middleware/auth'

@@ -1,3 +1,5 @@
+'use server'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser, getAllUsers, userEdit, userDelete } from '@/lib/firebase/db'
 import { adminEmail } from '@/lib/firebase/config'
