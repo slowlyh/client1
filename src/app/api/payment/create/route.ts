@@ -78,7 +78,7 @@ export const POST = requireAuth(async (req: NextRequest, user: any) => {
     const tripayResult = await createTransaction(tripayData)
 
     // Prepare invoice data
-    const invoiceData = {
+    const invoiceData: any = {
       email: user.email,
       user_id: user.uid,
       amount: total,
@@ -89,17 +89,18 @@ export const POST = requireAuth(async (req: NextRequest, user: any) => {
         productId: product.id,
         file: product.file ? { type: 'cloud', data: product.file } : undefined
       }],
-      qr: tripayData.qr_string || tripayData.qr_url || '',
-      payment_url: tripayData.payment_url || '',
-      redirect_url: tripayData.redirect_url || '',
-      status: tripayData.status || 'Pending',
+      qr: tripayResult.qr_string || tripayResult.qr_url || '',
+      payment_url: tripayResult.payment_url || '',
+      redirect_url: tripayResult.redirect_url || '',
+      status: tripayResult.status || 'Pending',
       payment_method: 'Tripay',
       additional_information: additional_information || product.additional_information,
       product_id: product.id,
       tripay_reference: merchantRef,
-      tripay_trx_id: tripayData.trx_id,
+      tripay_trx_id: tripayResult.trx_id || tripayResult.reference,
       created_at: new Date().toISOString(),
-      expires_at: new Date(calculateExpiredTime(24) * 1000).toISOString()
+      expires_at: new Date(calculateExpiredTime(24) * 1000).toISOString(),
+      paid_at: null
     }
 
     // Create invoice in Firestore
@@ -121,11 +122,11 @@ export const POST = requireAuth(async (req: NextRequest, user: any) => {
         amount: total,
         fee,
         price,
-        payment_url: tripayData.payment_url || '',
-        redirect_url: tripayData.redirect_url || '',
-        qr_string: tripayData.qr_string || '',
-        qr_url: tripayData.qr_url || '',
-        pay_url: tripayData.pay_url || tripayData.checkout_url || '',
+        payment_url: tripayResult.payment_url || '',
+        redirect_url: tripayResult.redirect_url || '',
+        qr_string: tripayResult.qr_string || '',
+        qr_url: tripayResult.qr_url || '',
+        pay_url: tripayResult.pay_url || tripayResult.checkout_url || '',
         redirect: `/invoice/${invoiceResult.data}`
       }
     })

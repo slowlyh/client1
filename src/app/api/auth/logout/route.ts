@@ -9,24 +9,9 @@ export async function POST() {
   })
 
   // Delete all auth cookies
-  response.cookies.delete('firebase_token', {
-    path: '/'
-  })
-  response.cookies.delete('token', {
-    path: '/'
-  })
-
-  // Set expired cookies for any other cookie names
-  const cookieNames = ['firebase_token', 'token', 'auth_token']
-  cookieNames.forEach(name => {
-    response.cookies.set(name, '', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      expires: new Date(0),
-      path: '/'
-    })
-  })
+  response.cookies.delete('firebase_token')
+  response.cookies.delete('token')
+  response.cookies.delete('auth_token')
 
   return response
 }

@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
   // Disable React strict mode (can enable if all components are compatible)
   reactStrictMode: false,
 
+  // Turbopack configuration (Next.js 16 uses Turbopack by default)
+  turbopack: {},
+
   // Webpack configuration to prevent Node.js modules in client bundle
   webpack: (config, { isServer }) => {
     // Prevent Node.js modules from being bundled in client

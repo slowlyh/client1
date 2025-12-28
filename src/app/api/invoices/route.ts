@@ -19,16 +19,10 @@ export async function GET(request: NextRequest) {
     const email = searchParams.get('email') || undefined
     const status = searchParams.get('status') || undefined
 
-    // Build query
-    const query: any = {}
-    if (email) query.email = email
-    if (status) query.status = status
-
     // Get invoices with pagination
     const result = await getAllInvoices({
-      query,
+      email,
       limit,
-      page,
       sort: { field: 'created_at', direction: 'desc' }
     })
 

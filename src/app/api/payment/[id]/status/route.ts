@@ -57,8 +57,8 @@ export async function GET(
       // Update invoice status in Firestore
       await invoiceUpdate(invoiceId, {
         status: 'Paid',
-        paid_at: new Date().toISOString(),
-        payment_at: new Date().toISOString()
+        paid_at: new Date(),
+        payment_at: new Date()
       })
       // Increment product sales
       if (invoice.product_id) {

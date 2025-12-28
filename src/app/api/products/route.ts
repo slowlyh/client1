@@ -38,9 +38,7 @@ export async function GET(request: NextRequest) {
     // Get products with pagination
     const result = await getAllProducts({
       query,
-      search,
       limit,
-      page,
       sort: { field: 'created_at', direction: 'desc' }
     })
 

@@ -44,27 +44,41 @@ export interface Product {
 export interface Invoice {
   id: string
   email: string | null
+  user_id?: string
   amount: number
   items: Array<{
     productId: string
     productName: string
     price: number
     quantity: number
+    file?: {
+      type: 'local' | 'firebase' | 'cloud'
+      data: string
+    }
   }>
   qr?: string | null
   va?: string | null
   redirect?: string | null
-  status: 'Pending' | 'Paid' | 'Failed' | 'Expired'
+  payment_url?: string | null
+  download_link?: string | null
+  qr_string?: string | null
+  qr_url?: string | null
+  pay_url?: string | null
+  checkout_url?: string | null
+  status: 'Pending' | 'Paid' | 'Failed' | 'Expired' | 'Paid_Lunas'
   additional_information?: Array<{
     key: string
     value: string
   }>
   created_at: Date
-  paid_at: Date | null
+  paid_at?: Date | null
+  expires_at?: Date
   payment_method: string | null
   receipt?: string | null
-  download_link?: string | null
   download_link_expires_at?: Date | null
+  product_id?: string
+  tripay_reference?: string
+  tripay_trx_id?: string
 }
 
 export interface AuthResponse {
