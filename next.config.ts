@@ -4,9 +4,11 @@ const nextConfig: NextConfig = {
   // Enable standalone output for deployment (Vercel, Netlify, Docker, etc.)
   output: "standalone",
 
+  // Server external packages - prevents bundling of server-only packages
+  serverExternalPackages: ['firebase-admin', 'grpc', '@grpc/grpc-js'],
+
   // Optimize images for better performance
   images: {
-    domains: ['firebasestorage.googleapis.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -25,27 +27,6 @@ const nextConfig: NextConfig = {
 
   // Disable React strict mode (can enable if all components are compatible)
   reactStrictMode: false,
-
-  // ESLint configuration
-  eslint: {
-    // Ignore ESLint errors during builds for faster deployments
-    // Consider enabling in production for code quality
-    ignoreDuringBuilds: process.env.NODE_ENV !== 'production',
-  },
-
-  // Webpack configuration (for advanced use cases)
-  webpack: (config, { isServer }) => {
-    // Handle Firebase Admin SDK in server-side only
-    if (!isServer) {
-      // Exclude Firebase Admin from client bundle
-      config.externals = {
-        ...(config.externals || {}),
-        'firebase-admin': 'firebase-admin',
-      };
-    }
-
-    return config;
-  },
 };
 
 export default nextConfig;
