@@ -111,3 +111,25 @@ Stage Summary:
 - Vercel deployment ready with standalone output
 - Firebase integration working
 - Minor warning: middleware file convention deprecation (non-blocking)
+
+---
+Task ID: 7
+Agent: Z.ai Code
+Task: Temporary removal of "Add Product" feature to fix build errors
+
+Work Log:
+- Deleted folder src/app/dashboard/add-product/ containing page.tsx
+- Updated src/app/dashboard/products/page.tsx:
+  - Commented out "Tambah Produk Baru" button (line 157-162)
+  - Commented out "Tambah Produk Pertama" button (line 282-289)
+- Updated src/middleware.ts:
+  - Removed /dashboard/add-product from PROTECTED_ROUTES
+  - Removed /dashboard/add-product from ADMIN_ONLY_ROUTES
+- Verified no remaining imports from add-product folder
+
+Stage Summary:
+- add-product folder and page completely removed
+- All UI links to add-product commented out
+- Middleware updated to remove add-product route references
+- Build errors related to firebase-admin imports in add-product should be resolved
+

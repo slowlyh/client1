@@ -5,8 +5,8 @@ import { adminEmail } from '@/lib/firebase/config'
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
 
 // Routes configuration
-const PROTECTED_ROUTES = ['/dashboard', '/dashboard/products', '/dashboard/add-product', '/dashboard/product', '/invoice']
-const ADMIN_ONLY_ROUTES = ['/dashboard/products', '/dashboard/add-product', '/dashboard/product']
+const PROTECTED_ROUTES = ['/dashboard', '/dashboard/products', '/dashboard/product', '/invoice']
+const ADMIN_ONLY_ROUTES = ['/dashboard/products', '/dashboard/product']
 const PUBLIC_ROUTES = ['/login', '/', '/products', '/product']
 
 // Rate limiting configuration

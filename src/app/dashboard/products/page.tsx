@@ -154,12 +154,13 @@ export default function DashboardProductsPage() {
                   <p className="">Kelola semua produk toko Anda</p>
                 </div>
               </div>
-              <Link href="/dashboard/add-product">
+              {/* TAMBAH PRODUK BUTTON DIHAPUS SEMENTARA */}
+              {/* <Link href="/dashboard/add-product">
                 <Button className="bg-gradient-to-r  foreground">
                   <Plus className="w-4 h-4 mr-2" />
                   Tambah Produk Baru
                 </Button>
-              </Link>
+              </Link> */}
             </div>
 
             {/* Stats */}
@@ -278,14 +279,15 @@ export default function DashboardProductsPage() {
                     ? 'Tidak ada produk yang sesuai dengan pencarian'
                     : 'Belum ada produk yang ditambahkan'}
                 </p>
-                {!searchQuery && !filterCategory && (
+                {/* TAMBAH PRODUK PERTAMA BUTTON DIHAPUS SEMENTARA */}
+                {/* {!searchQuery && !filterCategory && (
                   <Link href="/dashboard/add-product">
                     <Button className="bg-gradient-to-r  foreground">
                       <Plus className="w-4 h-4 mr-2" />
                       Tambah Produk Pertama
                     </Button>
                   </Link>
-                )}
+                )} */}
               </Card>
             ) : (
               /* Products Grid */
