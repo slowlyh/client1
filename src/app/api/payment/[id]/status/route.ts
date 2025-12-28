@@ -51,7 +51,7 @@ export async function GET(
 
     // Map Tripay status to our status
     const tripayStatus = tripayResult.status
-    let mappedStatus = invoice.status
+    let mappedStatus: 'Pending' | 'Paid' | 'Failed' | 'Expired' = invoice.status
 
     if (tripayStatus === 'PAID') {
       mappedStatus = 'Paid'
