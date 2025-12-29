@@ -198,14 +198,9 @@ export default function BuyCard({ product: initialProduct }: BuyCardProps) {
     )
   }
 
-  // Logic pengecekan ketersediaan stok yang sederhana dan type-safe
-  // Produk tersedia jika:
-  // 1. stock_available === true (boolean), ATAU
-  // 2. stock (number) > 0, ATAU
-  // 3. stock_available tidak ada dan stock tidak ada (default: tersedia)
-  const stockAvailable = product?.stock_available === true ||
-                         (typeof product?.stock === 'number' && product.stock > 0) ||
-                         (product?.stock_available === undefined && product?.stock === undefined);
+  // Logic pengecekan ketersediaan stok yang sederhana
+  // Produk tersedia jika stock_available === true atau undefined (default: tersedia)
+  const stockAvailable = product?.stock_available !== false;
 
   return (
     <Card className="bg-background shadow-lg sticky top-24">

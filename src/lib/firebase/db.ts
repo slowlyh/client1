@@ -59,7 +59,7 @@ export const getUser = async (email: string): Promise<{ status: boolean; data?: 
     const userRef = readDB.collection(COLLECTIONS.USERS).doc(email)
     const userSnap = await userRef.get()
 
-    if (!userSnap.exists()) {
+    if (!userSnap.exists) {
       return { status: false, message: 'Pengguna tidak ditemukan' }
     }
 
@@ -192,7 +192,7 @@ export const getProduct = async (productId: string): Promise<{ status: boolean; 
     const productRef = adminDb.collection(COLLECTIONS.PRODUCTS).doc(productId)
     const productSnap = await productRef.get()
 
-    if (!productSnap.exists()) {
+    if (!productSnap.exists) {
       return { status: false, message: 'Produk tidak ditemukan' }
     }
 
@@ -375,7 +375,7 @@ export const getInvoice = async (invoiceId: string): Promise<{ status: boolean; 
     const invoiceRef = adminDb.collection(COLLECTIONS.INVOICES).doc(invoiceId)
     const invoiceSnap = await invoiceRef.get()
 
-    if (!invoiceSnap.exists()) {
+    if (!invoiceSnap.exists) {
       return { status: false, message: 'Invoice tidak ditemukan' }
     }
 

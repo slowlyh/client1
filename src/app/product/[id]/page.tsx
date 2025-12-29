@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import AppFooter from '@/components/AppFooter'
-import { ArrowLeft, ShoppingCart, Star, Box, Download, MessageCircle } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, Star, Download, MessageCircle } from 'lucide-react'
 import BuyCard from '@/components/BuyCard'
 
 interface Product {
@@ -23,7 +23,6 @@ interface Product {
   image?: string
   images?: string[]
   stock_available?: boolean
-  stock?: number
   sold_count?: number
   rating?: number
   review_count?: number
@@ -74,14 +73,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : null
 
-  // Logic pengecekan ketersediaan stok yang sederhana dan type-safe
-  // Produk tersedia jika:
-  // 1. stock_available === true (boolean), ATAU
-  // 2. stock (number) > 0, ATAU
-  // 3. stock_available tidak ada dan stock tidak ada (default: tersedia)
-  const stockAvailable = product?.stock_available === true ||
-                         (typeof product?.stock === 'number' && product.stock > 0) ||
-                         (product?.stock_available === undefined && product?.stock === undefined);
+  // Logic pengecekan ketersediaan stok yang sederhana
+  // Produk tersedia jika stock_available === true atau undefined (default: tersedia)
+  const stockAvailable = product?.stock_available !== false;
 
   if (isLoading) {
     return (
@@ -295,7 +289,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </div>
 
                 {/* Meta Info */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {product.sold_count && (
                     <Card>
                       <CardContent className="p-4 flex items-center gap-3">
@@ -303,17 +297,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <div>
                           <div className="text-2xl font-bold ">{product.sold_count}</div>
                           <div className="text-sm ">Terjual</div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                  {product.stock && (
-                    <Card>
-                      <CardContent className="p-4 flex items-center gap-3">
-                        <Box className="w-6 h-6 " />
-                        <div>
-                          <div className="text-2xl font-bold ">{product.stock}</div>
-                          <div className="text-sm ">Tersedia</div>
                         </div>
                       </CardContent>
                     </Card>

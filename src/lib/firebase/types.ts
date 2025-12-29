@@ -30,7 +30,6 @@ export interface Product {
     value: string
   }>
   stock_available: boolean
-  stock?: number
   show: boolean
   category?: string
   sold_count?: number
