@@ -1,6 +1,12 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode
+} from 'react'
 import {
   User,
   signInWithPopup,
@@ -26,41 +32,44 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+/**
+ * Helper untuk mengambil message dari unknown error
+ * (Type-safe & konsisten)
+ */
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error) {
+    return error.message
+  }
+  return fallback
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [token, setToken] = useState<string | null>(null)
 
-  // Initialize auth state
   useEffect(() => {
-    // Check for existing token on mount
     const checkToken = async (currentUser: User | null) => {
-      if (currentUser) {
-        try {
-          const idToken = await getIdToken(currentUser)
-          setToken(idToken)
-          return idToken
-        } catch (error) {
-          console.error('Error getting ID token:', error)
-          return null
-        }
+      if (!currentUser) return null
+
+      try {
+        const idToken = await getIdToken(currentUser)
+        setToken(idToken)
+        return idToken
+      } catch (error) {
+        console.error('Error getting ID token:', error)
+        return null
       }
-      return null
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user)
       setLoading(false)
 
-      // Get ID token
       if (user) {
         await checkToken(user)
-
-        // Check if user is admin
         setIsAdmin(user.email === adminEmail)
-
-        // Send token to server
         await sendTokenToServer(user)
       } else {
         setToken(null)
@@ -68,13 +77,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    // Listen for ID token changes (auto-refresh)
     const idTokenUnsubscribe = onIdTokenChanged(auth, async (user) => {
       if (user) {
         const idToken = await user.getIdToken()
         setToken(idToken)
-
-        // Send new token to server
         await sendTokenToServer(user)
       } else {
         setToken(null)
@@ -87,7 +93,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // Send token to server
   const sendTokenToServer = async (currentUser: User) => {
     try {
       const idToken = await getIdToken(currentUser)
@@ -95,7 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ idToken }),
         credentials: 'include'
@@ -111,18 +116,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Manually refresh token
   const refreshToken = async () => {
-    if (user) {
-      try {
-        const idToken = await getIdToken(user, true)
-        setToken(idToken)
-        await sendTokenToServer(user)
-        toast.success('Token di-refresh')
-      } catch (error) {
-        console.error('Error refreshing token:', error)
-        toast.error('Gagal refresh token')
-      }
+    if (!user) return
+
+    try {
+      const idToken = await getIdToken(user, true)
+      setToken(idToken)
+      await sendTokenToServer(user)
+      toast.success('Token di-refresh')
+    } catch (error) {
+      console.error('Error refreshing token:', error)
+      toast.error('Gagal refresh token')
     }
   }
 
@@ -137,23 +141,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       return user
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error signing in with Google:', error)
 
-      // Handle auth errors
-      if (error.code === 'auth/popup-closed-by-user') {
-        toast.info('Login Dibatalkan', {
-          description: 'Anda menutup popup login.'
-        })
-      } else if (error.code === 'auth/popup-blocked') {
-        toast.error('Popup Diblokir', {
-          description: 'Silakan izinkan popup untuk login.'
-        })
-      } else {
-        toast.error('Gagal Login', {
-          description: error.message || 'Terjadi kesalahan saat login.'
-        })
-      }
+      const message = getErrorMessage(
+        error,
+        'Terjadi kesalahan saat login.'
+      )
+
+      toast.error('Gagal Login', {
+        description: message
+      })
 
       throw error
     }
@@ -161,17 +159,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      // Clear token
       setToken(null)
-
-      // Logout from Firebase
       await signOut(auth)
-
-      // Clear auth state
       setUser(null)
       setIsAdmin(false)
 
-      // Logout from server
       await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include'
@@ -182,15 +174,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
     } catch (error) {
       console.error('Error signing out:', error)
+
       toast.error('Gagal Logout', {
-        description: error.message || 'Terjadi kesalahan saat logout.'
+        description: getErrorMessage(
+          error,
+          'Terjadi kesalahan saat logout.'
+        )
       })
+
       throw error
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, token, signInWithGoogle, logout, refreshToken }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        isAdmin,
+        token,
+        signInWithGoogle,
+        logout,
+        refreshToken
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
@@ -198,7 +205,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')
   }
   return context
