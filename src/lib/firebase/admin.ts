@@ -1,21 +1,36 @@
-import 'server-only';
+import 'server-only'
 
-import { getApps, initializeApp, cert } from 'firebase-admin/app'
-import { getFirestore, increment } from 'firebase-admin/firestore'
-import { getAuth } from 'firebase-admin/auth'
-import { getStorage } from 'firebase-admin/storage'
+import { getApps, initializeApp, cert, App } from 'firebase-admin/app'
+import { getFirestore, FieldValue, Firestore } from 'firebase-admin/firestore'
+import { getAuth, Auth } from 'firebase-admin/auth'
+import { getStorage, Storage } from 'firebase-admin/storage'
 import { firebaseAdminConfig } from './config'
 
-// Initialize Firebase Admin
-const app = getApps().length === 0
-  ? initializeApp({
-      credential: cert(firebaseAdminConfig),
-      projectId: firebaseAdminConfig.project_id
-    })
-  : getApps()[0]
+let app: App
 
-const db = getFirestore(app)
-const adminAuth = getAuth(app)
-const storage = getStorage(app)
+if (!getApps().length) {
+  app = initializeApp({
+    credential: cert(firebaseAdminConfig),
+    projectId: firebaseAdminConfig.project_id
+  })
+} else {
+  app = getApps()[0]
+}
 
-export { app, db, adminAuth, storage, increment }
+const db: Firestore = getFirestore(app)
+const adminAuth: Auth = getAuth(app)
+const storage: Storage = getStorage(app)
+
+/**
+ * Export helper increment (wrapper)
+ * supaya pemakaian tetap simple
+ */
+const increment = FieldValue.increment
+
+export {
+  app,
+  db,
+  adminAuth,
+  storage,
+  increment
+}
